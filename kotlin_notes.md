@@ -34,11 +34,11 @@ fun main() {
 
 	println(MyClass.x)
 	MyClass.method()
-	
+
 }
 ```
 
-javada bunu static anahtar kelimesiyle yapiyoduk 
+javada bunu static anahtar kelimesiyle yapiyoduk
 
 ```java
 class MyClass {
@@ -82,4 +82,31 @@ class Nissan : Araba() {}
 - Dp kavramı, farklı ekranlarda aynı oranları yakalayabilmek için tasarlanmıştır. • Not : Ekran dokunuşlarında yeterli alanı sağlamak için önerilen parmak genişliği 50dp ‘ dir.
 - Sp ise ölçekten bağımsız aynı kalır, mm gibi düşünebilirsin.
 - navigation birden fazla aktivitede kullanılabilir ama her biri için ayrı navgraph oluşturman lazım
--
+- eğer normal value yerine live value dersen bir değişkenin verisine .value metoduyla ulaşırsın
+``` kotlin
+
+// view model
+class DenemeViewModel : ViewModel() {
+	var sonuc = MutableLiveData("0")
+
+	fun arttir() { sonuc.value += 10 }
+
+}
+
+// main activity
+
+class MainActivity: AppCompatActivity() {
+
+	onCreate() {
+
+		viewModel.sonuc.observe(this) {
+			var degisken = it
+		}
+
+	}
+
+}
+
+```
+
+- Preferences

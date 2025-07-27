@@ -54,16 +54,16 @@ void main() {
 - uygulamaya local resim ekleme:
     1. images isimli bir klasör yaratıyoruz
     2. resimleri buna atıyoruz
-    3. pubspec.yaml dosyasında yolunu belirtiyoruz (resim sayısı çoksa subdirectory direkt belirtebilirsin : images/ ) 
-    
+    3. pubspec.yaml dosyasında yolunu belirtiyoruz (resim sayısı çoksa subdirectory direkt belirtebilirsin : images/ )
+
     ```yaml
     flutter:
     assets:
     	- assets/resimler/resmim.png
     	- assets/resimler2/
-    
+
     ```
-    
+
 - uygulamaya ikon yapma
     1. appicon.co’ya giderek seçeceğin bir resmi uygulama ikonu olarak ayarlayıp zip dosyasını indirmelisin
     2. daha sonra zip dosyasının içindeki mipmap’li dosyaları main.dart dizinindeki android/app/src/main/res klasöründeki mipmaplarla değiştirmelisin
@@ -107,7 +107,7 @@ class MyApp extends StatelessWidget {
     1. width ile küçültebilirsin
     2. Expanded kullanabilirsin (it is child of a row or a column. expanded()’ın işlevi mümkün olduğunca taşırmadan ekranı doldurmasıdır. iki tane Expanded() kullanırsan iki resmi de eşit oranda (row()’da yatay, column()’da dikey olacak şekilde) genişletecektir. büyüklüklerinin oranlarını değiştirmek istiyosan you should use a method what is called flex: . Her birinin altına bunu yaz ve 2:1, 3:2 vs. gibi oran ver.
 
-fonksiyonların parametre de alabilir 
+fonksiyonların parametre de alabilir
 
 ```dart
 void greet(String name, String day) {
@@ -119,7 +119,7 @@ void main() {
 }
 ```
 
-parametreleri isimlendirdiğin sürece farklı sıralarda da verebilirsin 
+parametreleri isimlendirdiğin sürece farklı sıralarda da verebilirsin
 
 ```dart
 void main() {
@@ -127,7 +127,7 @@ void main() {
 }
 ```
 
-fonksiyonların output da alabilir 
+fonksiyonların output da alabilir
 
 ```dart
 int return_sum(var a, var b) {
@@ -158,7 +158,7 @@ int add(int a, int b) {
 int add(int a, int b) => a+b;
 ```
 
-ya da 
+ya da
 
 ```dart
 void main(
@@ -222,7 +222,7 @@ greet(name: "Alice", age: 25);
 greet(age: 30, name: "Bob");
 ```
 
-bunlara default değer de verebilirsin 
+bunlara default değer de verebilirsin
 
 ```dart
 void greet({String name = "Unknown", int age = 0}) {
@@ -232,7 +232,7 @@ void greet({String name = "Unknown", int age = 0}) {
 greet(); // Unkown ve 0 verir
 ```
 
-eğer named parameter kullanmasaydın sıraya riayet etmek zorundaydın. bu tür kullanıma ise `positional argument` denir. 
+eğer named parameter kullanmasaydın sıraya riayet etmek zorundaydın. bu tür kullanıma ise `positional argument` denir.
 
 ```dart
 void subtract(a, b) {
@@ -242,7 +242,7 @@ void subtract(a, b) {
 sum(5, 2);
 ```
 
-aralarındaki fark şudur. named argument kullanırken parametrelerden bazılarını vermeyebilirsin ama positional argument’larda hepsini vermek zorundasın. hata vermesin istiyosan şöyle yazmalısın 
+aralarındaki fark şudur. named argument kullanırken parametrelerden bazılarını vermeyebilirsin ama positional argument’larda hepsini vermek zorundasın. hata vermesin istiyosan şöyle yazmalısın
 
 ```dart
 void subtract(a, [b = 1]) {
@@ -252,7 +252,7 @@ void subtract(a, [b = 1]) {
 subtract(6) // 5
 ```
 
-kesinkes zorunlu olsun istiyosan `required` kullan 
+kesinkes zorunlu olsun istiyosan `required` kullan
 
 ```dart
 void subtract(required a, required b);
@@ -268,7 +268,7 @@ ayrıca subtract(int a, int b) demezsen verdiğin değere algılar.
 int a = 40;
 ```
 
-darttaki bazı temel veri tipleri 
+darttaki bazı temel veri tipleri
 
 1. int
 2. double
@@ -289,7 +289,7 @@ backgroundColor: Color.fromARGB(255, 10, 50, 100)
 // myClass burada sınıfının ismi
 // StatelessWidget sınıfından inherit ediyor extends sayesinde
 class MyClass extends StatelessWidget {
-  // constructor ekliyoruz 
+  // constructor ekliyoruz
   const MyClass({super.key});
 
   // states that we are overriding StatelessWidget
@@ -308,14 +308,14 @@ var a = 30;
 int b = 50;
 ```
 
-var getirirsen dinamik tanımlamış olursun yani eğer ilklendirmezsen bilgisayar onun hangi veri tipi tutacağını öngöremez o yüzden hata verir 
+var getirirsen dinamik tanımlamış olursun yani eğer ilklendirmezsen bilgisayar onun hangi veri tipi tutacağını öngöremez o yüzden hata verir
 
 ```dart
 String name = 'bugra'; // hata vermez
 String surname; // hata verir
 ```
 
-bu hatayı çözmek için sonuna `?` getirmelisin 
+bu hatayı çözmek için sonuna `?` getirmelisin
 
 ```dart
 String? surname; // hata vermez
@@ -440,13 +440,13 @@ void main() {
     'mehmet':66,
     'john':11
   };
-  
+
   my_map['john'] = 26; // modify
-  
+
   my_map['jane'] = 50; // change
-  
+
   my_map.remove('jane'); // remove
-  
+
   my_map.forEach((key, value) { // iterate
     print('$key: $value');
   });
@@ -522,7 +522,7 @@ void main() {
 ```kotlin
     double sizeX = MediaQuery.of(context).size.width;
     double sizeY = MediaQuery.of(context).size.height;
-    
+
     Container(
         width: sizeX,
         padding: EdgeInsets.all(sizeX / 20) ...
@@ -544,10 +544,358 @@ var aa = "asd";
 print(aa.capitalize()); // Asd
 ```
 
+- flutter'da http request nasıl yapılır?
+```dart
+Future<void> fetchData() async {
+  final response = await http.get('example.com/data');
+  if (response.statusCode == 200) {
+    // basarili
+    final data = json.decode(response.body);
+    print(data);
+  }
+}
+```
+
 - shared preferences fonksiyonlarının async yazılmasının sebebi bilgileri memory’e değil disk’e işlemesidir, bu da çok daha fazla zaman ve işlem yükü tutar. bunu da main thread’de yapmak tehlikelidir.
 
 ```dart
 SharedPreferences prefs = await SharedPreferences.getInstance();
 ```
 
--
+-  go_router (for page navigation. recommended way by flutter)
+
+1) define a router
+
+``` dart
+final GoRouter _router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(path: '/', builder: (context, state) => HomeScreen()),
+    GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
+  ],
+);
+```
+
+2) materialApp'ini değiştir
+
+``` dart
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  final GoRouter _router = GoRouter(
+    initialLocation: '/',
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => HomeScreen()),
+      GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
+    ],
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router( // material.router
+      title: 'My Flutter App',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      routerConfig: _router,
+    );
+  }
+}
+```
+3) use them
+
+``` dart
+context.go('/login');      // Replaces current page (like Navigator.pushReplacement)
+context.push('/login');    // Pushes onto stack (like Navigator.push)
+context.pop();             // Goes back (like Navigator.pop)
+```
+
+4) authentication check
+
+``` dart
+
+final GoRouter _router = GoRouter(
+  redirect: (context, state) {
+    final isLoggedIn = /* check your auth logic */;
+    final isLoggingIn = state.location == '/login';
+
+    if (!isLoggedIn && !isLoggingIn) return '/login';
+    if (isLoggedIn && isLoggingIn) return '/';
+    return null;
+  },
+  routes: [ /* your routes */ ],
+);
+
+```
+
+* positional arguments vs. named arguments:
+  * positional parametreleri dogru sirayla girmek zorundasın. [] for optional
+  * named'ler ise isimle argümanlandirilirlar. {} for optional
+```dart
+
+void myFun(String name,[ int age = 0]) {
+  print("Hi, my name is $name and I am $age years old.");
+}
+
+void myFun2({required String name, int age = 0}){
+  print("Hi, my name is $name and I am $age years old.");
+}
+
+void main() {
+  myFun("bugra", 24);
+  myFun2(name: "bugra");
+}
+```
+
+* Flutter uses a rebuild + diffing approach:
+  * When state changes → build() is called again.
+  * Flutter creates a new widget tree.
+  * It compares the new tree with the old tree (from previous build).
+  * It checks which widgets changed and which stayed the same.
+  * Only the changed parts of the UI are repainted.
+
+* BuildContext is an object that represents the location of a widget in the widget tree.
+
+* `final`, `const` ve `static` farkı:
+  * final ile tanımladıgın bir degisken compile-time'da bilinmez, run-time'da bilinir ve sonrasında degismez. `final date = DateTime.now()` gibi.
+  * const ile tanımladıgın da degismez, ama compile-time'da bilinir. `const pi = 3.14`
+  * static ise belli bir instance'a degil sınıfa aittir. sınıfın bütün objeleri tarafından paylasılır.
+* bir fonksiyona parametre olarak fonksiyon verme (onclick)
+```dart
+void greet(String yourGreet, void Function() onClick) {
+  print("$yourGreet");
+  onClick();
+}
+
+// when you call it
+greet("hello", () {
+  print("this is onclick");
+});
+```
+* fat arrow notation: => `onclick => greet()`
+* `mount` olayı nedir? stateful widgetlarda kullanilir, asenkronize functionlarla. setState() degistirecegin degiskenin var oldugundan emin olmak için kullanılır. disposed bir widgetla kullanılmasın diye.
+
+```dart
+class MyWidget extends StatefulWidget {
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  String data = 'Loading...';
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    await Future.delayed(Duration(seconds: 2));
+
+    if (!mounted) return;  // Safe check before setState
+
+    setState(() {
+      data = 'Data Loaded';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(data);
+  }
+}
+```
+* `mixin` nedir? mixinler flutterda bir sınıftan inherit etme olayını kaldırır. bir metodu farklı sınıfların kullanabilir hale gelir:
+```dart
+
+// class yerine mixin diyoruz
+mixin merhabaMixin {
+    String isim = 'bugra';
+    void merhabaDe() => print("merhaba, $isim");
+}
+
+// daha sonra bir sınıftan bu mixin'i `with` ile aliyoruz
+class Deneme with merhabaMixin {
+  merhabaDe();
+}
+
+void main() {
+  Deneme deneme = Deneme();
+  deneme.merhabaDe(); // merhaba, bugra
+}
+```
+bazen de de bir mixini sadece istedigin bir sınıf kullanabilsin istersin. o zaman da `on` anahtar kelimesini kullanırsın
+```dart
+class Deneme {
+  String isim = 'bugra';
+}
+
+mixin MerhabaMixin on Deneme {
+  void merhabaDe() => print("merhaba, $isim");
+}
+
+class DenemeAlt extends Deneme with MerhabaMixin {}
+
+void main() {
+  DenemeAlt d = DenemeAlt();
+  d.merhabaDe(); // ✅ works fine
+}
+```
+burada şuna dikkat et: `on` kullanacaksan üçüncü bir sınıfa ihtiyacın var. direkt Deneme + Mixin yapamiyorsun çünkü ikisinin de ilklendirilmiş olması lazım.
+* null-aware operators
+  * ?.
+  * ??
+* `image.network` ile `NetworkImage` farkı: image.network direkt olarak foto yüklemeni sağlayan bir **widget**tir. NetworkImage ise bir widget degil bir photo provider olarak calısır. fotografın kendisini degil adresini tutar.
+* what is `async`, `await` and `future` in flutter?
+  * **async**, bir fonksiyonu asenkronize flagleyen anahtar kelimedir. böylelikle fonksiyon içerisinde await calıstırabilir.
+  ```dart
+  Future<void> loadData() async {
+    print('Start loading...');
+    await Future.delayed(Duration(seconds: 2)); // 2 saniye bekler
+    print('Finished loading');
+  }
+  ```
+  * **await** fonksiyonun beklemesini saglayan kelimedir. genelde httplerde kullanılır:
+  ```dart
+  import 'package:http/http.dart' as http;
+
+  Future<void> fetchData() async {
+    var url = Uri.parse('https://jsonplaceholder.typicode.com/todos/1');
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      print('${response.body}');
+    } else {
+      print('Hata: ${response.statusCode}');
+    }
+  }
+
+  void main() async {
+    await fetchData(); // Future fonksiyon olduğu için await gerekiyor
+  }
+  ```
+  * **Future** değişkenler ve fonksiyonlar ileride ilklendirilecek olan şeylerdir. asenkronize calısır. http requestleri, delaylerde vs. kullanılır.
+  ```dart
+  Future<String> fetchData() {
+    return Future.delayed(Duration(seconds: 2), () {
+      return 'Data Loaded'; // cagrıldıktan 2 saniye sonra calısır
+    });
+  }
+  ```
+* what is `vsync`? The vsync in Flutter is an abbreviation for "vertical synchronization". It's a feature that ensures that animations and user interface updates are synchronized with the device's screen refresh rate. This prevents visual artifacts, such as screen tearing or stuttering,
+* `assert` ne için kullanılır?
+```dart
+int score = 50;
+assert(score >= 60, "Score must be at least 60");
+```
+eğer 60'tan düşükse puanin, 2nd argüman yazdırılıyor. boolean check için kullanılır.
+* `FutureBuild` nedir? bir stream halinde geliyorsa Future objeler bunu kullaniyosun:
+```dart
+import 'package:http/http.dart' as http;
+
+Future<List<String>> _fetchData() async {
+  return Future.delayed(
+    Duration(seconds: 2),
+    () {
+      return ["Item 1", "Item 2", "Item 3"];
+    },
+  );
+}
+
+void main() async {
+  print('Application started. Fetching data...');
+
+  try {
+    final List<String> data = await _fetchData();
+
+    print('\n--- Data Fetched ---');
+    if (data.isEmpty) {
+      print('No items found.');
+    } else {
+      for (var i = 0; i < data.length; i++) {
+        print('${i + 1}. ${data[i]}');
+      }
+    }
+    print('--------------------\n');
+    print('Application finished successfully.');
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+```
+* flutter'da singleton yaratmanın en kolay yolu: Factory Constructor kullan. 3 seye ihtiyacın var: static instance yarat, factory constructor yarat, instance'ini döndüren static method yarat.
+
+```dart
+class MySingleton{
+
+  // 1. static ile sunu basarıyor: bu instance sınıfa ait, objeye degil. tek & unique
+  static final MySingleton _instance = MySingleton._internal(); // _makes private
+
+  // normalde, her MySingleton() cagırısında, mesela
+  //  var mySingleton = MySingleton();
+  //  var mySingleton2 = MySingleton(); [2 farklı obje yaratılır]
+  // ama 2. factory constructor sayesinde bu sınıfı singleton yapiyosun,
+  // sınıftan ikinci bir obje türetemiyosun.
+  factory MySingleton() {
+    return _instance;
+  }
+
+  // 3. private named constructor
+  MySingleton._internal();
+
+  // bu 3 seyle singleton yaratmıs oluyosun
+
+}
+
+// ----------------
+
+var obj1 = MySingleton();
+var obj2 = MySingleton();
+
+print(obj1 == obj2); // TRUE
+```
+
+* There are two main types of tests in Flutter: unit tests and integration tests. Unit tests focus on individual pieces of code, such as a single function or widget, and test their behavior in isolation. Integration tests, on the other hand, test the app as a whole, including the interactions between different parts of the app. `flutter_test` paketini kullanabilirsin.
+
+* how do you pass data between screens? sayfanda constructor olarak alırsın:
+
+```dart
+
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => SecondScreen(data: 'Hello World!'),
+  ),
+);
+
+// -------------
+
+class SecondScreen extends StatelessWidget {
+  final String data;
+
+  SecondScreen({required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold( ... );
+  }
+}
+
+```
+
+* how to create a draggable widget?
+
+```dart
+Draggable<int>(
+  data: 1,
+  feedback: Material(
+    color: Colors.transparent,
+    child: Icon(Icons.access_alarm, size: 50),
+  ),
+  childWhenDragging: Container(),
+  child: Icon(Icons.access_alarm),
+)
+```
+
+* 
