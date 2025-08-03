@@ -6,9 +6,9 @@
 - ama aynı prompt her seferinde aynı cevabı üretmesin diye her zaman most occuring token da seçilmiyor ai tarafından, araya `temperature` dediği bir randomness faktörü de katıyor: creativity.
 - Neural networks (and in particular Recurrent Neural Networks – RNNs) significantly enhanced natural language processing, enabling the representation of the meaning of text in a more meaningful way, valuing the context of a word in a sentence.
 - the difference between a service and a model. A service is a product that is offered by a Cloud Service Provider, and is often a combination of models, data, and other components. A model is the core component of a service, and is often a foundation model, such as an LLM.
+- llms are developed cumulatively, that is, chatgpt-3.5 is used to as the `foundation model` to develop chatgpt-4.
 -
-- asd
-- asd
-- as
-- d
+-
+-
+-
 

@@ -1,4 +1,4 @@
-# python
+# Python Notes
 
 - hata mesajlarını özelleştirebilirsin
 
@@ -26,7 +26,7 @@ float add_float(float num1, float num2){
 }
 ```
 
- sonra .so uzantısıyla derlemelisin. 
+ sonra .so uzantısıyla derlemelisin.
 
 ```c
 // linux
@@ -35,7 +35,7 @@ gcc -shared -Wl,-soname,adder -o adder.so -fPIC add.c
 gcc -shared -Wl,-install_name,adder.so -o adder.so -fPIC add.c
 ```
 
-daha sonra python kodunda 
+daha sonra python kodunda
 
 ```python
 from ctypes import *
@@ -69,13 +69,13 @@ import solution
 
 - error types in python
     - syntax error
-    
+
     ```python
     print('hello!)
     ```
-    
+
     - logic error (hardest)
-    
+
     ```python
     n = 5
     total = 0
@@ -83,49 +83,49 @@ import solution
         total += i ** 2
     print(total)
     ```
-    
+
     - name error
-    
+
     ```python
     print(x)
     ```
-    
+
     - key error
-    
+
     ```python
     my_dict = {"one": 1, "two": 2, "three": 3}
     print(my_dict["four"])
     ```
-    
+
     - attribute error
-    
+
     ```python
     my_list = [1, 2, 3]
     print(my_list.append(4))
     ```
-    
+
     - type error
-    
+
     ```python
     my_list = [1, 2, 3]
     my_list.sort(reverse=True)
     print(my_list)
     ```
-    
+
     - value error
-    
+
     ```python
     my_string = "Hello, world!"
     print(int(my_string))
     ```
-    
+
     - IOerror (file not found)
-    
+
     ```python
     with open("nonexistent.txt", "r") as f:
         print(f.read())
     ```
-    
+
 - bir kodun çıktısını bir dosyaya yazdırmak istiyosan
 
 ```python
@@ -155,7 +155,7 @@ else:
     print("Not Equal") // it will print not equal
 ```
 
-çünkü float sayilar tam olarak bitlerle ifade edilemez. yani 0.10000000000 diye sonsuza kadar gitmez, bir yerde 0.100000000004 gibi bir hal alir. 
+çünkü float sayilar tam olarak bitlerle ifade edilemez. yani 0.10000000000 diye sonsuza kadar gitmez, bir yerde 0.100000000004 gibi bir hal alir.
 
 - to ask for multiple inputs in one line
 
@@ -169,7 +169,7 @@ def fun():
 	thirdNum = int(nums[2])
 ```
 
-or you can write it as 
+or you can write it as
 
 ```python
 nums = input("Enter 3 nums separated by commas: ")
@@ -186,13 +186,13 @@ sorted_list = sorted(my_list, key=lambda x: x[1])
 print(sorted_list) # [(1, 2, 9), (2, 6, 5), (3, 7, 4)]
 ```
 
-you can also set it to sort reversedly 
+you can also set it to sort reversedly
 
 ```python
 reverse_sorted_list = sorted(my_list, key=lambda x: x[1], reverse=True)
 ```
 
-you can also sort it also based on other indices 
+you can also sort it also based on other indices
 
 ```python
 reverse_sorted_list = sorted(my_list, key=lambda x: (x[1],x[2]), reverse=True)

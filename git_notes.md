@@ -1,6 +1,6 @@
-# git notları
+# Git Notes
 
-source → [[https://www.freecodecamp.org/news/git-cheat-sheet/](https://www.freecodecamp.org/news/git-cheat-sheet/)] 
+source → [[https://www.freecodecamp.org/news/git-cheat-sheet/](https://www.freecodecamp.org/news/git-cheat-sheet/)]
 
 ---
 
@@ -36,7 +36,7 @@ git status
 - `commit changes`
 
 ```markdown
-git commit 
+git commit
 git commit -m "your message"
 git commit -a -m "your message" (git add + git commit in one command)
 ```
@@ -58,18 +58,18 @@ git show <commit-id>
 - `see the differences between local changes and staged files (those git added)`
 
 ```markdown
-git diff 
+git diff
 
 git diff --staged (shows the diff b/w the last commit)
 
-git diff commit1 commit2 (shows the difference b/w two commits)  
+git diff commit1 commit2 (shows the difference b/w two commits)
 for instance: git diff master master2
 ```
 
 - `to link a folder with a repository`
 
 ```markdown
-git init (in an empty folder) 
+git init (in an empty folder)
 git remote add origin your_repo_link
 git remote -v (verify)
 git add && commit
@@ -103,7 +103,7 @@ vim .gitignore [things you want to exclude like *.out *.o *.exe myFile etc. ]
 - `reset your commit to a previous one`
 
 ```markdown
-git reset --soft <commit> (moves back to the commit's log BUT keeps the later 
+git reset --soft <commit> (moves back to the commit's log BUT keeps the later
 changes intact, in staged area)
 
 git reset --mixed <commit> (moves back to the commit's log BUT removes the files
@@ -121,7 +121,7 @@ git reset --soft/mixed/hard HEAD~1 (undoes the last 1 commit)
 git checkout <branch_name> (switch to a branch)
 git checkout -b <new_branch> (create & switch to a new branch)
 
-git checkout <file_name> (discards local changes & reverts a file 
+git checkout <file_name> (discards local changes & reverts a file
 to the state it has in the latest commit)
 ```
 
@@ -134,7 +134,7 @@ git commit -amend -m "new commit message"
 - `create a new commit with the undoing`
 
 ```markdown
-unlike git reset, git revert creates a whole new commit that does 
+unlike git reset, git revert creates a whole new commit that does
 not have the latest changes
 
 git revert <commit> && git push
@@ -187,25 +187,25 @@ git log --oneline --graph --all
 git stash
 ```
 
-stashlerine mesaj vermek için 
+stashlerine mesaj vermek için
 
 ```kotlin
 git stash save "my stash message"
 ```
 
-stashlerini görmek için 
+stashlerini görmek için
 
 ```kotlin
 git stash list
 ```
 
-bir stashi stackten alip uygulamak için 
+bir stashi stackten alip uygulamak için
 
 ```kotlin
 git stash pop
 ```
 
-eğer silinmesin istiyosan 
+eğer silinmesin istiyosan
 
 ```kotlin
 git stash apply
@@ -223,7 +223,7 @@ git stash clear
 git reset f7e633deb7cbb
 ```
 
-değişiklikleri de silmek istiyosan 
+değişiklikleri de silmek istiyosan
 
 ```kotlin
 git reset --hard f7e633deb7cbb

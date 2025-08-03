@@ -1,4 +1,4 @@
-# makefile notları
+# Makefile Notes
 
 - [ ]  [https://makefiletutorial.com/#static-pattern-rules](https://makefiletutorial.com/#static-pattern-rules)
 - [ ]  [https://noahloomans.com/tutorials/makefile/](https://noahloomans.com/tutorials/makefile/)
@@ -19,13 +19,13 @@
 	* deneme.h
 ```
 
-dosyaların var. bunları derlemek ve tek bir output dosyasına yazdırmak için 
+dosyaların var. bunları derlemek ve tek bir output dosyasına yazdırmak için
 
 ```makefile
 	gcc -o deneme deneme.c deneme2.c -I.
 ```
 
-demen gerekirdi. bunları make ile çok daha kolay bir yolla derleyebiliriz: 
+demen gerekirdi. bunları make ile çok daha kolay bir yolla derleyebiliriz:
 
 ```makefile
 all: deneme.c deneme2.c
@@ -33,7 +33,7 @@ all: deneme.c deneme2.c
 # ${CC} ${CFLAGS} -o ${NAME} ${SRCS}
 ```
 
-bu makefile’ı biraz daha geliştirelim: 
+bu makefile’ı biraz daha geliştirelim:
 
 - The variables set with`:=` are always set unconditionally. Variables set with `?=` are only set if it hasn’t been set already.
 - makefile büyük ölçüde kurallardan oluşur.
@@ -43,7 +43,7 @@ all: name
 	gcc name -o my_name
 ```
 
-Makefile’da commandları yazarken **`tab`** ile indentlemelisin aksi taktirde çalışmazlar. aslında bunun da bir work-around’ı var. o da .RECIPEPREFIX’i değiştirerek: 
+Makefile’da commandları yazarken **`tab`** ile indentlemelisin aksi taktirde çalışmazlar. aslında bunun da bir work-around’ı var. o da .RECIPEPREFIX’i değiştirerek:
 
 ```makefile
 .RECIPEPREFIX = >
@@ -85,14 +85,14 @@ deneme:
 	cc deneme.c -o deneme
 ```
 
-fakat bu sefer de deneme.c’nin içeriğini değiştirdikten sonra make dersek makefile tekrar çalışmaz çünkü ona göre zaten deneme isimli bir dosya mevcut. bunu `deneme` kuralına bir bağımlılık atayarak çözebiliriz: 
+fakat bu sefer de deneme.c’nin içeriğini değiştirdikten sonra make dersek makefile tekrar çalışmaz çünkü ona göre zaten deneme isimli bir dosya mevcut. bunu `deneme` kuralına bir bağımlılık atayarak çözebiliriz:
 
 ```makefile
 deneme: *deneme.c*
 	cc deneme.c -o deneme
 ```
 
-bunu bir başka örnekte de görelim. mesela şöyle bi makefile’ımız var 
+bunu bir başka örnekte de görelim. mesela şöyle bi makefile’ımız var
 
 ```c
 NAME = result
@@ -196,7 +196,7 @@ three:
 ```makefile
 all: greet
 
-greet:: 
+greet::
 	@echo "hello"
 
 greet::
@@ -215,10 +215,10 @@ all:
 
 ```makefile
 all:
-	@echo `pwd` 
+	@echo `pwd`
 ```
 
-kuralların her bir satırı ayrı ayrı çalıştırılan shell komutları gibidir. o yüzden birinci komut satırında tanımladığın bir değişken bir alttakinde geçerli olmaz:  
+kuralların her bir satırı ayrı ayrı çalıştırılan shell komutları gibidir. o yüzden birinci komut satırında tanımladığın bir değişken bir alttakinde geçerli olmaz:
 
 ```makefile
 hi:
@@ -229,7 +229,7 @@ hi:
 çalışmaz. fakat aynı satırda olmak şartıyla başka komutlar da ekleyebilirsin:
 
 ```makefile
-all: 
+all:
 	cd ..
 	@echo `pwd` # this won't work bc it is on different lines. however
 
@@ -245,7 +245,7 @@ SHELL=/bin/bash
 - uzun satırları `\` ile bölebilirsin
 
 ```makefile
-some_file: 
+some_file:
 	echo This line is too long, so \
 		it is broken up into multiple lines
 ```

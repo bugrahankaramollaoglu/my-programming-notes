@@ -1,5 +1,5 @@
 
-# REST API NOTES
+# Rest Notes
 
 * rest, http protokolü üzerinde çalışan bir mimarinin adıdır. bu mimariyi kullanan web servislerine ise rest api denir. rest api için ihtiyacımız olan ilk şey bir URL. bir url'ye GET ile istek atınca sana json/xml formatında bir response döndürür. sadece bu aradaki köprü önemlidir, client server'in iç kodlarını bilmek zorunda değildir, or vice versa.
 * bir api geliştirmek için başka alternatifler de vardır.
@@ -14,7 +14,7 @@
 	* POST /urunler
 	* DELETE /urunler/25
 	get, post ve delete burada http metotları, diğerleri ise URI'lerdir. URI isminde fiil kullanilmaz (/getUser) gibi. Örnek:
-	
+
 	``` javascript
 	const express = require('express');
 	const app = express();
@@ -57,7 +57,7 @@
 	app.listen(3000, () => console.log("API 3000'de çalışıyor"));
 
 	```
-	bunu daha sonra appinde kullanmak istersen de: 
+	bunu daha sonra appinde kullanmak istersen de:
 	``` dart
 	Future<List<dynamic>> fetchUrunler() async {
 	    final response = await http.get(Uri.parse('http://localhost:3000/urunler'));
@@ -68,7 +68,7 @@
 	    }
   }
 	```
-	
+
 * mesela bir yemek siparişi uygulaması yaziyosun ve user pizza siparişi verdi. uygulaman, bu siparişi REST API'ye şöyle gönderir
 
 ``` dart
@@ -88,7 +88,7 @@ POST /siparis
 1. header: metadatayı tutar
 2. body: sunucudan gelen esas veri. json formatındadır.
 3. status line: 3 haneli http statusCode. (200, 500 vs.)
-* Rest API'de 4 temel işlem 
+* Rest API'de 4 temel işlem
 	* **GET**: veri çekmeye yarar
 	* **POST**: veri yüklemeye yarar
 	* **PUT**: veri güncellemeye yarar
@@ -101,11 +101,11 @@ POST /siparis
 		res.send(`Hello, your ip: ${req.ip}`);
 	});
 	```
-	* **Uniform Interface** olması: REST API'nin tüm kaynaklara (kullanıcı, ürün, sipariş...) aynı şekilde erişilmesini sağlayan bir standarttır. Basitçe:  
-		* Tüm kaynaklar için:      URL’ler net olmalı (/kullanici/1, /urun/5)      
-		* HTTP metodları düzgün kullanılmalı (GET, POST, PUT, DELETE)      
+	* **Uniform Interface** olması: REST API'nin tüm kaynaklara (kullanıcı, ürün, sipariş...) aynı şekilde erişilmesini sağlayan bir standarttır. Basitçe:
+		* Tüm kaynaklar için:      URL’ler net olmalı (/kullanici/1, /urun/5)
+		* HTTP metodları düzgün kullanılmalı (GET, POST, PUT, DELETE)
 		* Cevap formatı genelde JSON olmalı ama xml, txt, html de olabilir.
-		* Kaynaklar "isim" olarak temsil edilmeli, fiil değil     
+		* Kaynaklar "isim" olarak temsil edilmeli, fiil değil
 		Yanlış: /getUser, /deleteUser     ✅ Doğru: /kullanici, /kullanici/1
 	```javascript
 	const express = require('express');
@@ -153,7 +153,7 @@ POST /siparis
 			res.json( {serverTime: new Date() } );
 		});
 	```
-	
+
 	```dart
 		// APP TARAFI
 		Future<void> fetchTime() async {
@@ -161,9 +161,9 @@ POST /siparis
 			final response = await http.get(url);
 			if (response.statusCode == 200) { // başarılı oldu }
 			else { // hata }
-		
+
 	```
-	* **Cacheable** olması: REST API’den gelen bazı cevaplar tekrar tekrar değişmediği sürece aynı kalır. Bu cevapları tekrar tekrar istemek yerine, önbelleğe (cache) alıp doğrudan kullanabiliriz. 
+	* **Cacheable** olması: REST API’den gelen bazı cevaplar tekrar tekrar değişmediği sürece aynı kalır. Bu cevapları tekrar tekrar istemek yerine, önbelleğe (cache) alıp doğrudan kullanabiliriz.
 	``` javascript
 		const express = require('express');
 		const app = express();
@@ -194,7 +194,7 @@ POST /siparis
 | **409** | Conflict              | Yazma işlemlerinde çakışma (conflict) olduğunda döner.                                      |
 | **415** | Unsupported Media Type| Desteklenmeyen medya tipi ile resource gönderildiğinde döner.                              |
 | **500** | Internal Server Error | Server tarafında bir hata olduğunda ve istek yerine getirilemediğinde döner.                |
-* **express** nedir, neden kullanırız? express, bir nodejs framework'ü ve işleri kolaylaştırıyor. normalde vanilla http ile 
+* **express** nedir, neden kullanırız? express, bir nodejs framework'ü ve işleri kolaylaştırıyor. normalde vanilla http ile
 ``` javascript
 const http = require('http');
 

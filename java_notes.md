@@ -23,7 +23,7 @@ public class MultipleInputs {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("İki tamsayıyı boşlukla ayırarak girin: ");
-        
+
         // İki tamsayıyı boşlukla ayırarak alıyoruz
         int firstNumber = scanner.nextInt();
         int secondNumber = scanner.nextInt();
@@ -36,7 +36,7 @@ public class MultipleInputs {
 }
 ```
 
-ama eğer sayı çok fazla ise döngü kullanmalısın 
+ama eğer sayı çok fazla ise döngü kullanmalısın
 
 ```java
 public class MultipleInputs {
@@ -49,7 +49,7 @@ public class MultipleInputs {
         int[] numbers = new int[numberOfInputs];
 
         System.out.println("Lütfen " + numberOfInputs + " adet sayıyı boşluklarla ayırarak girin: ");
-        
+
         for (int i = 0; i < numberOfInputs; i++) {
             numbers[i] = scanner.nextInt();
         }
@@ -148,7 +148,7 @@ class Deneme {
 ```java
 class Deneme {
 	public static void main(String[] args) {
-		System.out.println(args[0]); // bugra 
+		System.out.println(args[0]); // bugra
 		System.out.println(args[1]); // kara
 		System.out.println(args[2]); // molla
 		System.out.println(args[3]); // oglu
@@ -227,6 +227,18 @@ class Deneme {
 }
 ```
 
+- javada liste oluşturmanın birkaç yolu var
+```java
+int[] arr = {10, 20, 30};
+int[] arr = new int[3]{10, 20, 30};
+
+List<Integer> arr = Arrays.asList(10, 20, 30);
+List<Integer> arr = List.of(10, 20, 30);
+
+List<Integer> arr = ArrayList<Integer>();
+arr.methods();
+```
+
 - hangisi daha verimli? `==` mi `equals()` mi?
 
 ```java
@@ -269,56 +281,56 @@ class Deneme {
 
 - bazı önemli tagler:
     - non-static: her kullanışta yeni kopyalar yaratılır
-    
+
     ```java
     public class Car {
         String model;   // non-static variable
         int year;       // non-static variable
-    
+
         public Car(String model, int year) {
             this.model = model;
             this.year = year;
         }
     }
     ```
-    
+
     - static: burada ise objeye değil, sınıfa özel değişkenlerden bahsediyoruz. bir statik değişkenin yalnızca bir kopyası vardır, sınıfın tüm objeleri arasında bu kullanılır
-    
+
     ```java
     public class Counter {
         static int count = 0;   // static variable
-    
+
         public Counter() {
             count++;
         }
     }
     ```
-    
+
     - final: atandıktan sonra değeri değiştirlmesin istediklerimiz
-    
+
     ```java
     public class Circle {
         final double PI = 3.14;  // final non-static variable
         static final int RADIUS = 5;  // final static variable
     }
     ```
-    
+
     - private: sadece sınıf içinden erişilebilen değişkenlerdir
-    
+
     ```java
     public class Person {
         private String name;   // private variable
-    
+
         public String getName() {
             return name;
         }
-    
+
         public void setName(String name) {
             this.name = name;
         }
     }
     ```
-    
+
 - sonuç ne olur?
 
 ```java
@@ -426,9 +438,9 @@ class Deneme {
 }
 ```
 
-- **`Overloading`:** Aynı isime sahip birden fazla metod kullanma durumuna overloading denir. Bu durumda, metotları birbirinden ayıran fark, aldıkları parametre olur. Bir metodu overloading yaparken aynı işlemi veya benzer işlemleri de gerçekleştirecek şekilde overloading yapmalısınız. 
-**`Override`**: Bir metodun tekrardan yazılması anlamına gelir. Kalıtım 
-ile aldığımız bir metodu değiştirmek istersek o zaman override etmemiz 
+- **`Overloading`:** Aynı isime sahip birden fazla metod kullanma durumuna overloading denir. Bu durumda, metotları birbirinden ayıran fark, aldıkları parametre olur. Bir metodu overloading yaparken aynı işlemi veya benzer işlemleri de gerçekleştirecek şekilde overloading yapmalısınız.
+**`Override`**: Bir metodun tekrardan yazılması anlamına gelir. Kalıtım
+ile aldığımız bir metodu değiştirmek istersek o zaman override etmemiz
 yani yeniden yazmamız gerekir.w
 - sonuç ne olur?
 
@@ -477,7 +489,7 @@ public class HashTableExample {
 }
 ```
 
-key-value çiftlerinin saklandıgı bir map türü. unlike `HashMap`, `HashTable` is synkronized meanings it’s thread-safe. This means that multiple threads can access a hash table concurrently without the need for external synchronization. Neither keys nor values can be null in hash table. thread güvenliğinin olmadığı durumlarda hash map daha verimli oldugundan herkes genelde onu kullanır. 
+key-value çiftlerinin saklandıgı bir map türü. unlike `HashMap`, `HashTable` is synkronized meanings it’s thread-safe. This means that multiple threads can access a hash table concurrently without the need for external synchronization. Neither keys nor values can be null in hash table. thread güvenliğinin olmadığı durumlarda hash map daha verimli oldugundan herkes genelde onu kullanır.
 
 - HashMap: on the other hand is implemented like this
 
@@ -565,44 +577,44 @@ diyerek küçük/büyük harf kontrollerinden kurtulabilirsin
 - activity nedir? activity kullanının etkileşime geçtiği arayüzün adıdır. sayfa olarak düşünebiliriz. her uygulama en az bir aktivite kullanmak zorundadır. aktivitelerin yaşam döngüleri vardır, onCreate, onViewCreated, onDestroy vs. gibi. aktivitelere alternatif olarak daha light-weight olan fragmanlar da kullanılabilir. ilk olarak her zaman onCreate çağırılır.
 - intent nedir? intent farklı sayfalara geçmeye yarayan metodun adıdır. iki çeşidi vardır
     - `explicit intent`
-    
+
     ```java
     Intent intent = newIntent(this, SecondActivity.class);
     startActivity(intent);
     ```
-    
+
     - `implicit intent`
-    
+
     ```java
     Intent i = newIntent(Intent.ACTION_VIEW,Uri.parse(“http://www.amazon.com”));
     Intent i = newIntent(Intent.ACTION_DIAL,Uri.parse(“tel:+90505.....”));
     // direkt arar
     Intent i = newIntent(Intent.ACTION_CALL,Uri.parse(“tel:+90505.....”));
-    
+
     startActivity(i);
     ```
-    
+
     - `shared preference`: küçük çapta verileri key-value mantıgıyla saklamaya yarar. en güzel yanı uygulama kapansa da silinmemesidir. en kötü yanı ise sadece basit veri yapılarını saklayabilmesidir (string, boolean, float, int ve long). bu verileri xml dosyalarında saklar ve sonrasında çeker
 - kaç farklı şekilde data saklayabiliriz?
-    
+
     ```kotlin
     // kaydediyoruz
     val sharedPref: SharedPreferences = getSharedPreferences("com.bugra.app", Context.MODE_PRIVATE)
     val editor: SharedPreferences.editor = sharedPref.edit()
     editor.putString("my-key", "bu cümle saklanacak")
     editor.apply()
-    
+
     // daha sonra kayıtlı bilgiyi çekiyoruz
     val retrievedVal = sharedPref.getString("my-key", "def_value")
     println(retrievedVal)
-    
+
     // sharedPref içeriğini silmek için
     sharedPref.clear().apply()
-    
+
     ```
-    
+
     - `SQLite`: yerel bir sql kütüphanesinde verileri tablo halinde saklamaya yarar
-    
+
     ```kotlin
     db.execSQL(CREATE_TABLE_QUERY)
     private const val DATABASE_NAME = "my_database"
@@ -610,9 +622,9 @@ diyerek küçük/büyük harf kontrollerinden kurtulabilirsin
     private const val CREATE_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS MyTable (id INTEGER PRIMARY KEY, name TEXT);"
     private const val UPDATE_TABLE_QUERY = "DROP TABLE IF EXISTS MyTable; CREATE TABLE MyTable (id INTEGER PRIMARY KEY, name TEXT);"
     ```
-    
+
     - `Content Provider`: uygulama verilerini diğer uygulamalarla paylaşmaya yarar
-    
+
     ```kotlin
     val contentResolver = context.contentResolver
     val values = ContentValues().apply {
@@ -620,30 +632,30 @@ diyerek küçük/büyük harf kontrollerinden kurtulabilirsin
     }
     contentResolver.insert(Uri.parse("content://com.example.provider/mytable"), values)
     ```
-    
+
     - `File Storage:` dosyaya yazdırıp dosyadan okuma
-    
+
     ```kotlin
     // Dosyaya yazma
     context.openFileOutput("filename.txt", Context.MODE_PRIVATE).use {
         it.write("Hello, World!".toByteArray())
     }
-    
+
     // Dosyadan okuma
     context.openFileInput("filename.txt").bufferedReader().use {
         val content = it.readText()
         println(content)
     }
     ```
-    
+
     - `View Model`: belli bir veri yapısının içeriğini farklı yerlerden çekip/değiştirme
-    
+
     ```kotlin
     class MyViewModel : ViewModel() {
         private val _data = MutableLiveData<String>()
         val data: LiveData<String>
             get() = _data
-    
+
         fun updateData(newData: String) {
             _data.value = newData
         }
@@ -652,28 +664,28 @@ diyerek küçük/büyük harf kontrollerinden kurtulabilirsin
     		}
     }
     ```
-    
+
     daha sonra bir aktivitede
-    
+
     ```kotlin
     val sharedViewModel:SharedViewModel
     sharedViewModel.setdata("new")
     sharedViewModel.getData() // new vs.
     ```
-    
+
 - şöyle tanımlarsan
 
 ```java
 String s = "asd";
 ```
 
-java bunu string pool’da saklar. bir sonraki string yaratışında string poolu tarar, eğer birebir aynı stringi yaratmak istediysen bir daha yaratmaz ve var olanı kullanır. 
+java bunu string pool’da saklar. bir sonraki string yaratışında string poolu tarar, eğer birebir aynı stringi yaratmak istediysen bir daha yaratmaz ve var olanı kullanır.
 
 ```java
 String s = new String("asd");
 ```
 
-böyle yaparsan heap’te tutar. 
+böyle yaparsan heap’te tutar.
 
 ```java
 String s1 = "hello";
@@ -684,14 +696,14 @@ AMA
 
 String s3 = new String("hello");
 String s4 = new String("hello");
-System.out.println(s3 == s4); // false 
+System.out.println(s3 == s4); // false
 ```
 
 - bir listeyi .reversed() ile tersine çeviremezsin.
 
 ```java
 LinkedList<Integer> tmp = list.reversed(); // YANLIŞ
- 
+
 LinkedList<Integer> tmp = list;
 Collections.reverse(tmp); // DOĞRU
 ```
@@ -717,7 +729,7 @@ class Car {
 }
 ```
 
-yerine 
+yerine
 
 ```kotlin
 class Car(private val engine: Engine) {
@@ -753,4 +765,7 @@ DI yapmanın 3 yolu vardır
 
 1. field injection
 2. constructor injection
--
+
+
+* hashSet sıralamaya dikkat etmezken `LinkedHashSet` sıralamayı korur:
+*

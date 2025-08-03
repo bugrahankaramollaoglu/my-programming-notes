@@ -70,7 +70,7 @@ void main() {
     3. daha sonra ios/runner gidip assets.xcassets dosyasını yine zipteki aynı isimli dosyayla değiştirmelisin. Bu kadar, artık kare şeklinde bir icon verdin.
     4. fakat kare değil de yuvarlak ikon olsun istiyosan android/app/src/main/res’e sağ tıklayıp new 🡪 Image Asset deyip istediğin resmi kesip biçmen gerek. eğer Image Asset çıkmazsa (flutter projelerimde çıkmayabiliyor) Android klasörünü yeni pencerede açıp denemelisin
 - be really careful about indentation which is always 2 spaces
-- for hotReload to work, you should use a stateless or stateful widget
+- for hotReload to work, you should use a stateless or stateful widget.
 - widgetlar iki tür olabilir single-child or multi-child. that is to say that they can either have multiple widgets on themselves or only one single text, image etc. container with a single child will cover as much surface as it can. eğer container() metodunun içine mesela text yazdırdın ama yazdırdığın şey görünmüyosa, ekranın kenarlarında kalıp okunmuyorsa container’e alt+enter yapıp wrap with widget diyerek görünür alana taşıyabilirsin.
 
 ```dart
@@ -884,6 +884,15 @@ class SecondScreen extends StatelessWidget {
 
 ```
 
+ikinci bir alternatif ise argümanlı Navigator.pushNamed kullanmak:
+```dart
+Navigator.pushNamed(context, '/second', arguments: 'Hello');
+```
+daha sonra bunu gittigin sayfada söyle almak:
+```dart
+final String data = ModalRoute.of(context)!.settings.arguments as String;
+```
+
 * how to create a draggable widget?
 
 ```dart
@@ -898,4 +907,294 @@ Draggable<int>(
 )
 ```
 
-* 
+* widget lifecycles in flutter. flutter'da 2 çeşit widget vardır: `Stateful Widget` ve `Stateless Widget`.
+	* stateless widget'ın bir tane döngüsü vardır sadece:
+```dart
+@override
+Widget build(BuildContext context) {
+  // Called whenever the widget needs to be rebuilt
+}
+```
+setState() sadece `stateful widget`ta calısır. ama diger tür state managementlar her ikisinde de çalışır.
+* bir değişken lazy ise sadece kullanıldıgında yaratılır. verimlilik için.
+* flutter'da `listview` ile `listview.builder` arasındaki fark nedir?
+	* **listview** kullanırsan tüm ögeleri baştan oluşturur ve bellekte tutar. ögelerin sayısı küçük ve sabitse mantıklı. ama değilse performans açısından kötüdür.
+	* **listview.builder** ise sadece ekranda o an ne görünüyorsa onu draw eder. kaydırdıkça yeni ögeleri yükler. performanslıdır.
+
+* bütün sayfaların appbarlarının rengini tek seferde nasıl değiştiririm? tema üzerinden:
+```dart
+MaterialApp(
+  title: 'My App',
+  theme: ThemeData(
+    appBarTheme: AppBarTheme(
+      color: Colors.red,  // Bütün AppBar'lar kırmızı olacak
+    ),
+  ),
+  home: MyHomePage(),
+);
+```
+
+* mesela bir text tanımladın, ona özellikler verdin bir sürü ama bu özellikleri başka text'lerde de kullanmak istiyosun. tekrar tekrar yazmak istemiyosun? bu durumda bu texti bir componente çevirirsen daha sonra kullanabilirsin:
+
+```dart
+class CustomStyledText extends StatelessWidget {
+  final String text;
+  final TextAlign? textAlign;
+
+  const CustomStyledText(this.text, {Key? key, this.textAlign}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      textAlign: textAlign,
+      style: const TextStyle(
+        fontSize: 18,
+        fontStyle: FontStyle.italic,
+        fontWeight: FontWeight.bold,
+        color: Colors.amber,
+      ),
+    );
+  }
+}
+```
+bunu daha sonra söyle kullanabilirsin:
+```dart
+  body: Center(
+    child: CustomStyledText('asd'),
+  ),
+```
+
+* const kullanınca Flutter o widget’ı bir kere oluşturup tekrar tekrar yeniden oluşturmaz, bellekte aynı instance’ı kullanır. Böylece gereksiz tekrar işlemlerini engeller.
+* flutter'da `event loop` nedir? yazdıgın flutter kodunu sırayla isleyen motora denir. flutter, single thread calısır, böylece UI donmaz. uzun süren islemleri (Future, async/await vs.) yan threadde yapmalısın. ana thread'e `main isolate` denir.
+* flutter'da, initstate() içerisinde yazdıgın şeyler widget-tree henüz build edilmeden calışır, sayfa ilk yüklendiğinde. widgetların yüklenmesini beklemek istiyosan `addPostFrameCallback` metodunu kullanabilirsin (ideal yöntem):
+```dart
+@override
+void initState() {
+  super.initState();
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    // Burada widget build edildikten sonra yapılacak işlemleri yazabilirsin
+    setState(() {
+      backgroundColor = Colors.red;
+    });
+  });
+}
+```
+bir başka alternatif de `Future.delayed` kullanmaktır. o da şöyle çalışır:
+```dart
+@override
+void initState() {
+  super.initState();
+
+  Future.delayed(Duration.zero, () {
+    // Widget build edildikten sonra çalışır
+    setState(() {
+      backgroundColor = Colors.red;
+    });
+  });
+}
+```
+yine bir başka alternatif ise stateful widget yaşamdöngülerinden olan `didChangeDependencies()` altında yazmaktır:
+```dart
+@override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  // Bu method context erişimine uygundur
+  // ve build'den hemen önce çalışır.
+
+  // Ancak dikkat: bu method initState'ten sonra çalışır
+  // ama build tamamlanmadan önce tetiklenir.
+}
+```
+* sonuç ne olur?
+```dart
+void main() {
+  for (int i = 0; i < 10; i++) {
+    if (i.isOdd) {
+      print("$i");
+    } else {
+      Future.delayed(Duration(seconds: 1)).whenComplete(() {
+        print("$i");
+      });
+    }
+  }
+}
+```
+şu çıktıyı verir: 1 3 5 7 9 0 2 4 6 8. neden? çünkü flutter'da event loop denilen olay, önce senkronize işlemleri yapar (normal tasks). ancak onlar bittikten sonra asynchronous işlemlere (Future) geçilir. geçilene kadar bunlar heap'te tutulur.
+
+* flutter'da viewmodel oluşturmak native android'den biraz farklıdır. android'de ViewModel() sınıfından inherit ediyorduk. flutter'da ise viewmodellar genelde Provider/Riverpod gibi statemanagementlar yardımıyla implemente ediliyor. 3 yolu var:
+  * En sık kullanılan yolu, kendi vm'in + ChangeNotifier kullanmak
+  ```dart
+  class MyViewModel extends ChangeNotifier {
+    int count = 0;
+
+    void increment() {
+      count++;
+      notifyListeners();
+    }
+  }
+  ```
+  * hiçbir kütüphane kullanmadan basit bir sınıf yaz:
+  ```dart
+  class MyViewModel {
+    int count = 0;
+
+    void increment() {
+      count++;
+    }
+  }
+  ```
+  fakat bu yöntemde notifyListeners() gibi UI'ya haber veremezsin. Kendin setState() ile UI’ı yeniden çizmelisin.
+  * Provider, Riverpod, BloC gibi sm'lar kullanmak
+* different build types in flutter:
+  * debug: when developing the app.
+  * profile:
+  * release:
+
+* what are `Future` and `Streams` in flutter? asenkron programlamada kullanılan kavramlardır. Future tek bir value dönerken Stream birçok value döner sürekli olarak.
+* `get_it` is used for dependency injection.
+
+* flutterda kotlindeki gibi `data class` ve `class` farkı yoktur. modelleme yaparken class kullanır ve fonksiyonları (toString vs.) override ederiz. maalesef. ama data class haline getiren `freezed` kütüphanesi kullanabilirsin.
+
+*  More precise phrasing helps: Future represents a value that will be available later; async marks a function as asynchronous; await pauses execution until a Future completes.
+
+* In a `Future` function, saying the main thread is blocked is inaccurate — Dart uses an event loop and does not block the UI thread.
+*
+* flutter'da class constructor yazarken `{}` kullanmak zorunda değilsin `EĞER Kİ` positional parameter ise. named parameter ise zorundasın.
+
+* Stateful widget'ın ise 6 tane yaşamdöngüsü vardır. bunlara `view lifecycle methods` denir:
+  * `initState()`:
+* Platform Channel nedir? Flutter ile native (Kotlin/Swift) kod nasıl çalıştırılır? Flutter uygulamaları çoğunlukla Dart kodu ile yazılır ama bazı durumlarda native platform (Android/iOS) ile iletişim kurulması gerekir. Bunun için Flutter, Platform Channels yapısını sağlar. Yani flutterda native kodları (kotlin/swift vs.) calıstırmak icin kullandıgımız mekanizmaya `platform channels` deniyor. 3 temel platform channel türü var
+  * method channel: en yaygını. flutter->native / native->flutter veri alıp gönderir. mesela kamera erişimi, GPS konum alma, cihaz bilgisi vs. **anlık** veri.
+
+  * event channel: native->flutter'a sürekli veri gönderir. jiroskop, canlı konum vs. **sürekli** veri. method channeldan en büyük farkı bu.
+
+  * basicMessageChannel: flutter->native / native->flutter basit veri alip gönderir. **iki taraflı** sürekli veri.
+
+* Dio paketini kullanarak JWT ile korunan bir API’ye nasıl istek atarsın? Token'ı nasıl saklarsın ve her isteğe otomatik olarak nasıl eklersin? Interceptor nedir?
+  * flutterda bir token'ı güvenli bir şekilde saklamak için en sık kullanılan kütüphane `flutter_secure_storage` kütüphanesidir.
+  ```dart
+  final storage = FlutterSecureStorage();
+
+  // Token saklama
+  await storage.write(key: 'jwt_token', value: token);
+
+  // Token okuma
+  String? token = await storage.read(key: 'jwt_token');
+  ```
+* Eğer çok büyük bir listeyi (örneğin 10.000 öğe) göstermen gerekiyorsa performansı nasıl optimize edersin? Builder dışında ne tür optimizasyonlar yaparsın?
+  * Mümkün olan yerlerde const constructor kullanarak widget’ların yeniden oluşturulmasını önlersin. Bu sayede Flutter, aynı widget’ı yeniden çizmek yerine cache’den kullanır.
+  * listview.builder şart, ama yeterli değil. listview.builder içerisinde `cacheExtent` diye bir ayar var. bu listede ilk kaç px ön ve arkadaki elemanların önyüklenecegini belirliyor. cok verirsek hafıza sorunu yaşarız, az verirsek kaydırırken ögeler tam yüklenmeyebilir. optimize etmek zorundasın:
+    ```dart
+    ListView.builder(
+      cacheExtent: 500, // px cinsinden
+      ...
+    )
+    ```
+  * Image veya Ağ Kaynaklı Büyük Veriler İçin `cached_network_image` veya benzeri cache kullanımı Eğer listende çok sayıda resim varsa, networkten gelen resimleri önbelleğe almak performansı ciddi artırır.
+    ```dart
+    CachedNetworkImage(
+      imageUrl: 'https://example.com/image_$index.jpg',
+      placeholder: (context, url) => CircularProgressIndicator(),
+      errorWidget: (context, url, error) => Icon(Icons.error),
+    );
+    ```
+  * StatelessWidget kullanmak, gereksiz rebuild’leri engeller.
+  * `repaintBoundary` kullan. Bir widget’ı RepaintBoundary ile sarmaladığında, o widget ve alt widgetları kendi ayrı "paint layer"ına taşınır. Böylece sadece o bölge değiştiğinde yeniden çizilir, tüm liste değil. mesela:
+    ```dart
+    ListView.builder(
+      itemCount: 10000,
+      itemBuilder: (context, index) {
+        return RepaintBoundary(
+          child: ListTile(
+            title: Text('Öğe $index'),
+          ),
+        );
+      },
+    )
+    ```
+  *
+* Flutter'da responsive (duyarlı) tasarım için hangi yöntemleri kullanırsın? Tablet ve telefon ekranlarında aynı UI’yi farklı göstermek için nasıl bir yapı kurarsın?
+  * build() altında mediaQuery teknigi sayesinde sürekli bir şekilde ekranın boyutunu ögrenirim (ki rotationlarda vs. sorun cıkmasın). mesela width>600 ise tablete göre telefonsa daha küçük fontlar vs. veririm.
+  * `flutter_screen_util` paketini kullanarak relative boyutlar veririm: 60.w gibi
+  * `LayoutBuilder` kullanırım.
+  * `Expanded`, `Flexible` vs. kullanabilirsin.
+* FutureBuilder nedir? Ne zaman FutureBuilder kullanırsın, ne zaman StreamBuilder? Aralarındaki fark nedir? Alternatif olarak ne kullanırsın ve neden?
+  * `FutureBuilder`, tek seferlik asenkron işlemler için kullanılır. dönüş tipi `Future<>`'dır. Sadece bu future fonksiyon tamamlandıgında UI güncellenir.
+    ```dart
+    Future<String> fetchData() async {
+      await Future.delayed(Duration(seconds:4));
+      return "Veri yüklendi";
+    }
+
+    FutureBuilder<String>(future: fetchData(), builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text("Hata: {$snapshot.error}");
+          } else if (snapshot.hasData) {
+            return Text(snapshot.data!);
+          }
+          return Container();
+    })
+    ```
+  * `StreamBuilder` sürekli gelen asenkron işlemler için kullanılır. dönüş tipi `Stream<>`'dir.
+    ```dart
+    Stream<int> counterStream() async* {
+      for (int i = 0; i <= 10; i++) {
+        await Future.delayed(Duration(seconds: 1));
+        yield i;
+      }
+    }
+
+    StreamBuilder<int>(
+          stream: counterStream(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return CircularProgressIndicator();
+            return Text('sayaç: ${snapshot.data}');
+          },
+    )
+    ```
+* Bir widget gereksiz yere sürekli rebuild ediliyor. Bunu nasıl tespit eder ve nasıl engellersin? Flutter’da performans için hangi araçları ve yöntemleri kullanırsın?
+  * devTools'tan hangi widgetin fazla rebuild edildigine bak
+  * o widget'i const yap + o stateless widgetin constructorini widget yap. artık o widget güncellenmedikçe rebuild edilmeyecek.
+* MVVM kullandığını söyledin. Peki Clean Architecture ile MVVM arasında fark var mı? Flutter’da Clean Architecture kullanmak ister misin, neden?
+  * `mvvm`: Flutter’da ViewModel, genelde bir ChangeNotifier, StateNotifier, Bloc veya Provider ile temsil edilir. Model-View-Viewmodel olarak 3 katmandan oluşur.
+  * `clean architecture`: Uygulamanın tüm katmanlarını katı kurallarla ayırmayı amaçlar. Test edilebilirlik, sürdürülebilirlik. Bağımlılık ilkesi: Dış katmanlar, iç katmanlara bağımlı olabilir ama tersi OLAMAZ.`cleanArch` katmanları:
+    * 1. `domain` (Entity, Repository): ilk katman. Temel iş mantığı (mesela getAllUsersCase). saf kurallar. diğer katmanlara bağlı değil. burada Model Entity'sini yazarsın.
+    * 2. `data` (API, Database vs): orta katman. domain'e bağlıdır ama presentation'dan bağımsızdır. Veri kaynakları. Modeller, ApiServices vs. burada olur. burada api/db ile iletişim kurarız. domain'de yazdıgın interfaceleri burada Repository implementation ile kullanırsın. buradaki model API'dan gelen json verisini temsil eder. Api isteklerini atar (fetchData() gibi).
+    * 3. `presentation` (UI, View + Viewmodel): son katman. kullanıcının gördügü kısım. state yönetimi burada yapılır (riverpod vs.) Widgetlar, Aktiviteler, ViewModellar burada olur. API ile doğrudan konuşmazsın, sadece apiCall'lari yaparsin.
+    * 4. `application` main.dart
+* Eğer uygulamada 3 farklı sekme varsa (örneğin BottomNavigationBar ile), her sekmede kendi navigation stack’i varsa bunu nasıl yönetirsin? Nested navigation nedir?
+  * her sayfaya ayrı bir navigation_key tanımlarız (`GlobalKey<NavigatorState>()`)
+  * go_router ile de yapabiliyoduk.
+* Flutter'da isolate nedir? compute fonksiyonu ne işe yarar? async ile farkı nedir?
+  * Isolate, Dart’ın çoklu iş parçacığı (thread) gibi ama aslında ondan bağımsız çalışan, hafızası ve event loop’u ayrı olan paralel çalışma ortamıdır.
+  * Yani her isolate kendi hafızasına ve kod akışına sahiptir, başka isolate’lar ile paylaşımlı hafıza yoktur.
+  * Bu, Flutter’da UI thread’ini (ana thread) bloklamadan, arka planda ağır işlemleri yapabilmek için kullanılır.
+  * UI thread, uygulamanın arayüzünü çizer ve kullanıcı etkileşimlerini işler. Uzun süren işlemler burada yapılırsa uygulama donar (frame drop, lag olur).
+  * async/await'ten farkı async/await aynı thread üzerinde basit işlemler yapar, sadece delayed bir şekilde çalışır. isolate ise kendi iş threadini yaratır ve çok daha büyük computation gerektiren zamanlarda kullanılır.
+* basit -> setState, orta -> riverpod, profesyonel -> bloC
+* cached_network_image
+  * internetten çektiğin resimleri önbelleğe alarak yükleme hızını arttıran flutter paketi.
+* Riverpod'un amacı nedir? Riverpod’da Provider, StateProvider, FutureProvider, Notifier farkları nedir? Riverpod kullanarak basit bir sayaç uygulamasını nasıl yazarsın? Kodu yaz.
+* Widget tree nasıl çalışır? Build sürecinde neler olur? Widget’ların parent-child ilişkisi neden önemlidir? Widget’ların fazla derin olması (deep widget tree) performansı nasıl etkiler? Bunu önlemek için neler yaparsın?
+* flutterda singleton nasıl yaratılır?
+```dart
+  class Logger {
+    static final Logger _instance = Logger._internal();
+
+    factory Logger() {
+      return _instance;
+    }
+
+    Logger._internal(); // Private named constructor
+
+    void log(String message) {
+      print("Log: $message");
+    }
+  }
+```
+
+*

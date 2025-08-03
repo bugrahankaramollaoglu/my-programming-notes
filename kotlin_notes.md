@@ -106,7 +106,44 @@ class MainActivity: AppCompatActivity() {
 	}
 
 }
-
 ```
 
-- Preferences
+- `data class` ve `class` farkı:
+  - data class genelde data modellemek için kullanılır
+  ```kotlin
+	data class User(val name: String) // gibi
+  ```
+  - data yazarsan başına `toString()`, `hashCode()`, `copy()`, `equals()` gibi bazı metotlar default gelir.
+      - equals() bir sınıftan türetilen iki objenin eşit olup olmadığını kontrol ederken kullanılır.
+	  ```kotlin
+	data class User(val name: String)
+
+	fun main() {
+		val user1 = User("bugra")
+		val user2 = User("bugra")
+		println(user1.name)
+		println(user2.name)
+
+		println(user1 == user2) // true
+		println(user1.equals(user2)) // true
+
+		// ama eğer data class olmasaydı true verirdi
+		// çünkü class'ın equals() metodu data class gibi
+		// override edilmemiştir
+		// değerleri/datayı değil bellek adresini karşılaştırır
+	}
+	```
+	neden?
+   - ayrıca data class içerisine en az 1 primary constructor vermek zorundasın
+   ```kotlin
+	data class myData() // X Hata verir
+	data class myData(var name: String) // V okay
+   ```
+   - bununla beraber normal class çok daha özelleştirilebilir ve soyutlanabilirdir.
+- hashCode() kotlin'de bir nesnenin sahip olduğu id'dir. unique olmayabilir. hashMap gibi çağrılarda nesnelerin aynı olup olmadığını kısaca hashcodelarını karşılaştırıp buluruz.
+- google mvvm'i destekliyor. nedir mvvm?
+  - model: API, veritabanı, Repository'ler
+  - view: Aktiviteler, Fragmanlar, XML'ler vs.
+  - viewmodel: Livedata, Stateflow vs. Model ve View katmanı arasındaki köprü.
+  esas amacı, uygulamada kullanıcının gördüğü, etkileşime geçtiği UI katmanıyla arka planda çalışan business mantığını birbirinden ayırmaktır. böylelikle katmanlar arasındaki bağımlılıklar azalır, atomik bir yapıya dönüşür.
+-
