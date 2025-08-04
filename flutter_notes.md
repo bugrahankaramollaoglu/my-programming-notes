@@ -1063,8 +1063,17 @@ void main() {
 *
 * flutter'da class constructor yazarken `{}` kullanmak zorunda değilsin `EĞER Kİ` positional parameter ise. named parameter ise zorundasın.
 
-* Stateful widget'ın ise 6 tane yaşamdöngüsü vardır. bunlara `view lifecycle methods` denir:
-  * `initState()`:
+* Stateful widget'ın ise **8** tane yaşamdöngüsü vardır. bunlara `view lifecycle methods` denir:
+  1. `createState()`: statefulWidget ilk defa *yaratılma emri verildiginde*, flutter ilk olarak bu metodu cagırır.
+  artık `mount` propertysi true oldu bu widgetin. When createState creates your state class, a buildContext is assigned to that state. buildContext is the place in the widget tree in which this widget is placed. All widgets have a bool this.mounted property. It is turned true when the buildContext is assigned. It is an error to call setState when a widget is unmounted.
+  2. `initState()`: widgetin ilk *yaratıldıgında* cagrılır. sadece bir kez calısır.
+  3. `didChangeDependencies()`: initState'ten hemen sonra cagrılır. sınıfın bağımlılıklarından biri değiştiğinde.
+  4. `build()`: widget treeni sürekli rebuild eden metot. içine BuildContext alır. didChangeDependencies'ten hemen sonra execute edilir.
+  5. `didUpdateWidget()`: parent class'ın yeni bir veri gönderdi, ama statefulWidget'ının tamamen değişmesi gerekmiyor. flutter o zaman rebuild etmez, bu metodu cagırır ve `oldWidget` ile `yeniWidget`i karsılastırır.
+  6. `setState()`: verilerin degistigini haber verir ve real-time UI'i günceller.
+  7. `deactivate()`: state widgetTree'den silindiginde calısan metot (ama kaynakları hala tutuyor). mesela bir video uygulaması düşün, kullanıcı başka sekmeye geçiyor ama geri de dönebilir. hem nerede kaldıgının bilgisini tutman lazım hem de bu video widgetini ekrandan silmen lazım. bunu deactive() sayesinde yapiyosun.
+  8. `dispose()`: state tamamen kaldırıldı. memory free edilir. `mount` objesi false yapilir.
+
 * Platform Channel nedir? Flutter ile native (Kotlin/Swift) kod nasıl çalıştırılır? Flutter uygulamaları çoğunlukla Dart kodu ile yazılır ama bazı durumlarda native platform (Android/iOS) ile iletişim kurulması gerekir. Bunun için Flutter, Platform Channels yapısını sağlar. Yani flutterda native kodları (kotlin/swift vs.) calıstırmak icin kullandıgımız mekanizmaya `platform channels` deniyor. 3 temel platform channel türü var
   * method channel: en yaygını. flutter->native / native->flutter veri alıp gönderir. mesela kamera erişimi, GPS konum alma, cihaz bilgisi vs. **anlık** veri.
 
@@ -1114,7 +1123,6 @@ void main() {
       },
     )
     ```
-  *
 * Flutter'da responsive (duyarlı) tasarım için hangi yöntemleri kullanırsın? Tablet ve telefon ekranlarında aynı UI’yi farklı göstermek için nasıl bir yapı kurarsın?
   * build() altında mediaQuery teknigi sayesinde sürekli bir şekilde ekranın boyutunu ögrenirim (ki rotationlarda vs. sorun cıkmasın). mesela width>600 ise tablete göre telefonsa daha küçük fontlar vs. veririm.
   * `flutter_screen_util` paketini kullanarak relative boyutlar veririm: 60.w gibi
@@ -1197,4 +1205,155 @@ void main() {
   }
 ```
 
-*
+* http/dio ile api verisi çekerken profesyonel düzeyde hata kotrolü yapmak istiyosan statusCode==200 yeterli değildir:
+```dart
+Future<void> fetchData() async {
+  try {
+    final response = await http.get(Uri.parse('mydata.com/users'));
+    if (response.statusCode == 200) {
+      // API'den veri başarıyla çekildi
+    } else {
+      // Hata mesajı göster
+      throw Exception('Veri çekme başarısız oldu (${response.statusCode})');
+    }
+  } on SocketException {
+    // Ağ bağlantısı yoksa
+    throw Exception('Ağ bağlantısı yok');
+  } on TimeoutException {
+    // İstek timeout olduysa
+    throw Exception('İstek timeout oldu');
+  } catch (e) {
+    // Diğer hatalar
+    throw Exception('Bilinmeyen hata: $e');
+  }
+}
+```
+ama çoğu zaman bu da yetmez. mesela bir provider/riverpod içerisinde kullanıcıya ekranın loading/finish halini nasıl gösterebiliriz? viewmodel + isLoading flag yardımıyla:
+
+```dart
+class MyViewModel with ChangeNotifier {
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
+
+  Future<void> fetchData() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      // fetchData implementasyonu
+      final response = await http.get(Uri.parse('mydata.com/users'));
+      if (response.statusCode == 200) {
+        // API'den veri başarıyla çekildi
+      } else {
+        _errorMessage = 'Veri çekme başarısız oldu (${response.statusCode})';
+      }
+    } on SocketException {
+      _errorMessage = 'Ağ bağlantısı yok';
+    } on TimeoutException {
+      _errorMessage = 'İstek timeout oldu';
+    } catch (e) {
+      _errorMessage = 'Bilinmeyen hata: $e';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+}
+```
+
+* mesela bir sayfadan başka bir sayfaya geçiyorsun ve bu sayfada bazı verileri göstermek istiyorsun. Ancak, bu verileri göstermek için bazı async işlemler yapman gerekiyor. Bu async işlemler sırasında sayfa değişirse ne olur? Bunu nasıl yönetirsin?
+  * `mounted` teknigiyle. mounted, bir stateful widgetin destroy edilip edilmedigini sorar.
+    ```dart
+    class MyPage extends StatefulWidget {
+      @override
+      _MyPageState createState() => _MyPageState();
+    }
+
+    class _MyPageState extends State<MyPage> {
+      bool isLoading = true;
+
+      @override
+      void initState() {
+        super.initState();
+        loadData();
+      }
+
+      Future<void> loadData() async {
+        // API çağrısı simülasyonu
+        await Future.delayed(Duration(seconds: 2));
+
+        // Widget hala mount edilmiş mi kontrol et
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+
+      @override
+      Widget build(BuildContext context) {
+        return Scaffold(
+          body: isLoading ? CircularProgressIndicator() : Text('Veri yüklendi'),
+        );
+      }
+    }
+    ```
+* `provider` nedir? bir state managementtir. en basit işler için kullanılır. provider'i bilmek istiyosan 3 şeyi bilmen gerek:
+  * **changeNotifier** is a simple class that offers change notifications to its listeners. namely, if something is a *ChangeNotifier*, you can subscribe to it (Observable in android). basit uygulamalarda genelde bir ChangeNotifier sınıfı provider kullanmaya yetiyor. provider için changeNotifier şart değil ama genellikle tercih edilir.
+    ```dart
+    class CartModel extends ChangeNotifier {
+      /// Internal, private state of the cart.
+      final List<Item> _items = [];
+
+      /// An unmodifiable view of the items in the cart.
+      UnmodifiableListView<Item> get items => UnmodifiableListView(_items);
+
+      /// The current total price of all items (assuming all items cost $42).
+      int get totalPrice => _items.length * 42;
+
+      /// Adds [item] to cart. This and [removeAll] are the only ways to modify the
+      /// cart from the outside.
+      void add(Item item) {
+        _items.add(item);
+        // This call tells the widgets that are listening to this model to rebuild.
+        notifyListeners();
+      }
+
+      /// Removes all items from the cart.
+      void removeAll() {
+        _items.clear();
+        // This call tells the widgets that are listening to this model to rebuild.
+        notifyListeners();
+      }
+    }
+    ```
+  * **changeNotifierProvider** is the widget that provides an instance of changeNotifier. it comes from the provider package. runApp'in icerigini bununla wrap ediyoruz.
+    ```dart
+    void main() {
+      runApp(
+        ChangeNotifierProvider(
+          create: (context) => CartModel(),
+          child: const MyApp(),
+        ),
+      );
+    }
+    ```
+  * **consumer** is used when we start actually using our provider model.
+    ```dart
+    return Consumer<CartModel>(
+      builder: (context, cart, child) {
+        return Text('Total price: ${cart.totalPrice}');
+      },
+    );
+    ```
+  ama bazen UI'i güncellemesen de bir metot cagırman gerekebilir. bu tür durumlarda Consumer() kullanmak gereksizdir, UI ile işin yok çünkü. böyle bir durumda listen=false parametresini de ekleyerek (aktif olarak dinlemesine gerek yok cünkü) `Provider.of` kullanarak providerinda tanımladıgın bir metoda erişebilirsin:
+  ```dart
+  Provider.of<CartModel>(context, listen: false).clearData();
+  ```
+* flutterda hata yönetimi
+  * try{catch}, özellikle api'la veri çekerken
+  * snackbar, dialog vs.
+  *
