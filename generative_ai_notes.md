@@ -7,8 +7,10 @@
 - Neural networks (and in particular Recurrent Neural Networks – RNNs) significantly enhanced natural language processing, enabling the representation of the meaning of text in a more meaningful way, valuing the context of a word in a sentence.
 - the difference between a service and a model. A service is a product that is offered by a Cloud Service Provider, and is often a combination of models, data, and other components. A model is the core component of a service, and is often a foundation model, such as an LLM.
 - llms are developed cumulatively, that is, chatgpt-3.5 is used to as the `foundation model` to develop chatgpt-4.
+- an AI Agent is a tool that enables you to use LLMs. an Agent consists of
+  * environment: agentin çalıştığı ortam, websitesi vs.
+  * sensors:
+  * actuators: agent'i eyleme geçiren kısım.
+- azure ai agent service offers you the chance to create your own ai agent
+- e
 -
--
--
--
-

@@ -1,4 +1,4 @@
-# cs notes
+# computer science notes
 
 - wifi: wireless fidelity
 - lan: local area network yani bir modeme bağlı birden çok cihazın oluşturduğu sistem. cihazların arasındaki veri alışverişini sağlayan, haliyle internet dediğimiz şeyin arka planındaki protokolün adı tcp. bunun geniş hali wan (wide area network), which is also known as internet.
@@ -12,7 +12,7 @@
 system("leaks a.out");
 ```
 
-     segfault’u ise lldb ile yapabilirsin  
+     segfault’u ise lldb ile yapabilirsin
 
 ```c
 lldb ./a.out ve sonrasında r'ye basarak bakabilirsin
@@ -242,7 +242,7 @@ int main()
 }
 ```
 
-string yazdırırken recursive  
+string yazdırırken recursive
 
 ```c
 void string_recursive(char *str)
@@ -309,27 +309,27 @@ gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook \
     - Problem 4 Write a function that given a list of non negative integers, arranges them such that they form the largest possible number. For example, given [50, 2, 1, 9], the largest formed number is 95021. Update: Apparently this problem got a lot of people talking (although not as much as Problem 5 below.) You can click here to read my solution.
     - Problem 5 Write a program that outputs all possibilities to put + or - or nothing between the numbers 1, 2, ..., 9 (in this order) such that the result is always 100. For example: 1 + 2 + 34 – 5 + 67 – 8 + 9 = 100.
 - 9 eylül 1947’de Harvard’da çalışan bir grubun bilgisayarına bir böcek giriyor. bunu cıkarma islemine debugging deniyor.
-    
+
     ![Screenshot from 2023-03-18 18-17-55.png](cs%20notes%201c0a671ddbf049b49066ac3ea1ad16a5/Screenshot_from_2023-03-18_18-17-55.png)
-    
-    aslında bu efsane dogru degil cünkü bug kelimesi hailhazırda WWII’den beri kullanımdaydi. hatta 1896’daki bir kitaba kadar gidiyor (new katchecism of electricity). hatta bundan da önce shakespeare hamletin `bugs and goblins in my life` cümlesinde bu kelimeyi sorun, problem anlamında kullanıyor. kısaltılmamıs hali bugbear: anything causing seemingly needless or excessive fear or anxiety. 
-    
+
+    aslında bu efsane dogru degil cünkü bug kelimesi hailhazırda WWII’den beri kullanımdaydi. hatta 1896’daki bir kitaba kadar gidiyor (new katchecism of electricity). hatta bundan da önce shakespeare hamletin `bugs and goblins in my life` cümlesinde bu kelimeyi sorun, problem anlamında kullanıyor. kısaltılmamıs hali bugbear: anything causing seemingly needless or excessive fear or anxiety.
+
 - dosyalar genelde 2 sınıfa ayrılır
     - text (metin) dosyaları: açtığında okunabilir şeyler gelen dosyalardır.
-    
+
     ```python
     f = open(dosya_adı, 'r')
     ```
-    
+
     - binary (ikili) dosyalar: genelde açılamayan, açıldığında anlamsız karakterlerin oldugu dosya tipleridir. resim müzik video dosyaları vs.
-    
+
     ```python
     f = open(dosya_adı, 'rb')
     # comes from binary
     ```
-    
+
     GNU/Linux dağıtımlarında newline `\n` işareti ile gösterilirken bu windows’ta `\r\n` ile gösterilir. dosyaları ‘r’ ile açarken python satır sonlarını OS’deki yukarıdaki farklı kullanımlarına göre değiştirir. binary dosyalarda bu değişiklikler dosyayı tümden okunmaz kılabilir, o yüzden ‘rb’ ile açmaya dikkat.
-    
+
 
  aslında text dosyaları da temelde ikili sistemi kullanır.
 
@@ -398,4 +398,10 @@ paralel programlamada bunlar aynıdır sadece kontrol üniteleri bir değil bird
         - Example: `This is sentence case.`
     - CONSTANT_CASE:
         - Example: `THIS_IS_CONSTANT_CASE`
+- SOLID
+  - Single Responsibility Principle (SRP) — A class should only do ONE thing and do it well. yani bir sınıf düşün hem veriyi çekiyor hem modify ediyor hem de sharedpref'e kaydediyor. Yanlış. üçe ayırmalısın.
+  - Open/Closed Principle (OCP) — bir sınıfa yeni özellikler ekleyebilmesin ama değiştirip çıkarma yapamamalısın (eski kodu bozmasın diye). dart'ta abstraction, arayüzler vs. buna yarar.
+  - Liskov Substitution Principle (LSP) — Bir alt sınıf (child), üst sınıf (parent) yerine kullanıldığında sistem doğru çalışmaya devam etmeli. Yani türetilmiş sınıf, üst sınıfın yerine geçebilir (substitutable) olmalı.
+  - Interface Segregation Principle (ISP) — "Bir sınıf, ihtiyaç duymadığı metodları içeren bir interface’e bağımlı kalmamalıdır."
+  - Dependency Inversion Principle (DIP) — Yüksek seviyeli modüller (iş mantığı), düşük seviyeli modüllere (veri kaynağı, API vs.) bağımlı olmamalı. İkisi de soyutlamalara (abstract/interface) bağlı olmalı.
 -

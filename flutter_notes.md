@@ -195,11 +195,7 @@ void main() {
 }
 ```
 
-- as you know dart is an OOP language. its four pillars are:
-    1. abstraction:
-    2. polymorphism
-    3. inheritance
-    4. encapsulation
+- as you know dart is an OOP language. learn more: https://medium.com/@bugrahankaramollaoglu/pillars-of-oop-ed42fb6d29e8
 - font ekleme:
     - fonts.google.com’dan font alıp atıyoruz assetlere
     - .yaml’da assets altında fonts altında ekliyoruz konumunu
@@ -884,6 +880,42 @@ class SecondScreen extends StatelessWidget {
 
 ```
 
+ya da eğer stateful widget'sa
+
+```dart
+
+
+class SecondScreen extends StatefulWidget {
+  final String mesaj;
+
+  SecondScreen({super.key, required this.mesaj});
+
+  @override
+  State<SecondScreen> createState() => _SecondScreenState();
+}
+
+class _SecondScreenState extends State<SecondScreen> {
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CounterPage()),
+            );
+          },
+          child: Text(widget.mesaj), // widget. ile erişirsin
+        ),
+      ),
+    );
+  }
+}
+
+```
+
 ikinci bir alternatif ise argümanlı Navigator.pushNamed kullanmak:
 ```dart
 Navigator.pushNamed(context, '/second', arguments: 'Hello');
@@ -892,6 +924,10 @@ daha sonra bunu gittigin sayfada söyle almak:
 ```dart
 final String data = ModalRoute.of(context)!.settings.arguments as String;
 ```
+
+ücüncü alternatif ise state managementlar kullanmak, riverpod vs.
+
+dördüncü alternatif sharedPref, dataStorage vs. kullanmak
 
 * how to create a draggable widget?
 
@@ -1048,9 +1084,8 @@ void main() {
   fakat bu yöntemde notifyListeners() gibi UI'ya haber veremezsin. Kendin setState() ile UI’ı yeniden çizmelisin.
   * Provider, Riverpod, BloC gibi sm'lar kullanmak
 * different build types in flutter:
-  * debug: when developing the app.
-  * profile:
-  * release:
+  * **debug**: when developing the app. _hotReload_ is allowed. uses JIT (Just-In-Time) compilation. It compiles the Dart code into machine code at runtime, allowing for hot reload and fast development cycles.
+  * **production**: when in production. only _hotRestart_ is allowed. uses AOT (Ahead-Of-Time) compilation. It compiles the Dart code into native machine code ahead of time, resulting in faster startup times and improved performance.
 
 * what are `Future` and `Streams` in flutter? asenkron programlamada kullanılan kavramlardır. Future tek bir value dönerken Stream birçok value döner sürekli olarak.
 * `get_it` is used for dependency injection.
@@ -1357,3 +1392,194 @@ class MyViewModel with ChangeNotifier {
   * try{catch}, özellikle api'la veri çekerken
   * snackbar, dialog vs.
   *
+* flutter kendi grafik motoruyla çiziyor ekrana ögeleri, bu yüzden android ve ios'un kendi UI resimlerine ihtiyaç duymuyor, böylece daha hızlı çalışıyor. bu motor eskiden skia'ydı ama şimdi ios'a yeni bir motor geliştiriyolar, yakında androide de gelecek. rakipleri olan react native, xamarin vs. ise bağlı olduğu platformun kendi grafik ögelerini kullanır.
+* What is the difference between "Debug Mode" and "Profile Mode" in Flutter development?
+  *
+* eğer listen statikse, gerek yok - ama dinamik bir listen varsa (animasyonlu, ekleme/çıkarmalı, sıralamalı vs.) Key (ValueKey, ObjectKey vs.) kullanman gerekebilir. mesela listenin elemanlarının yerini değiştirebilsin istiyosun kullanıcı, peki which item which nasıl hatırlayacaksın? UniqueObject sayesinde.
+  * **GlobalKey**: A global key is unique across the entire app, and is useful when you need to identify a widget from a different part of the app.
+  * **UniqueKey**: A unique key is unique within a widget's parent widget, and is useful when you need to identify a widget within a list of widgets.
+  * **ValueKey**: A value key is based on a value, such as a string or an integer, and is useful when you need to identify a widget within a list of widgets based on its value.
+* The onGenerateRoute intercepts route navigation requests and lets you dynamically control how routes (screens) are created — instead of using a fixed map of routes.
+```dart
+MaterialApp(
+  onGenerateRoute: (RouteSettings settings) {
+    switch (settings.name) {
+      case '/':
+        return MaterialPageRoute(builder: (_) => const HomePage());
+      case '/second':
+        final args = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => SecondPage(message: args));
+      default:
+        return MaterialPageRoute(builder: (_) => const NotFoundPage());
+    }
+  },
+);
+```
+! If you define both routes: {} and onGenerateRoute, the routes map takes precedence for known routes. Use one for clarity or ensure onGenerateRoute handles all.
+
+* Can you explain the concepts of "Isolate" and "Event Loop" in Dart?
+  * Flutter apps must be fast and responsive, especially on mobile. Dart achieves this through:
+    * Single-threaded execution for UI (like JavaScript)
+    * Isolates for concurrency (like lightweight threads)
+    * An Event Loop for async task handling.
+  * what is an ISOLATE in dart? An Isolate is an independent worker in Dart with its own memory and event loop. başka dillerdeki threadlere benzer ama threadlerden farklı olarak ortak bir hafızayı kullanmazlar. kendi hafıza alanları vardır isolatelerin. özellikle heavy computationlarda isolate kullanıyoruz:
+  ```dart
+    import 'dart:isolate';
+
+    void heavyTask(SendPort sendPort) {
+      int sum = 0;
+      for (int i = 0; i < 1000000000; i++) {
+        sum += i;
+      }
+      sendPort.send(sum);
+    }
+
+    void main() async {
+      ReceivePort receivePort = ReceivePort();
+
+      // creates a new isolate
+      await Isolate.spawn(heavyTask, receivePort.sendPort);
+
+      // data is sent via ports (like in microservices)
+      receivePort.listen((message) {
+        print('Result: $message');
+        receivePort.close();
+      });
+    }
+  ```
+  * what is event loop? The Event Loop is the mechanism that manages asynchronous events (like I/O, timers, Futures, Streams) and schedules tasks for execution. bir flutter uygulaması nasıl çalışır?
+    * Dart starts running main isolate.
+    * Dart maintains two task queues:
+      * Microtask queue (high priority)
+      * Event queue (normal priority)
+    * Event loop runs tasks in this order:
+      * Run all microtasks
+      * Then run one event task
+      * Repeat…
+  yani önce microtasklar (eventlooptakiler, async olmayanlar bitirilir, sonra async calısır). mesela:
+    ```dart
+    void main() {
+      print('Start'); // WORKS #1
+
+      Future(() => print('Future 1')); // WORKS #4
+      scheduleMicrotask(() => print('Microtask 1')); // WORKS #3
+      Future(() => print('Future 2')); // WORKS #5
+
+      print('End'); // WORKS #2
+    }
+    ```
+* Explain the different "types of Streams".
+  * single-subscription stream: Delivers events to only one listener. (i.e http request)
+    ```dart
+    void main() {
+      // Creating a single-subscription stream
+      var streamController = StreamController<int>();
+
+      // Adding a listener
+      var subscription = streamController.stream.listen((data) {
+        print('Received data: $data');
+      });
+
+      // Adding another listener would result in an error
+      // var secondSubscription = streamController.stream.listen((data) {
+      //   print('Another listener: $data');
+      // });
+
+      // Adding data to the stream
+      streamController.add(42);
+
+      // Cancelling the subscription when done
+      subscription.cancel();
+    }
+    ```
+  * Broadcast Stream: birden fazla listenera izin veriyor. Events are pushed to all listeners.
+    ```dart
+    void main() {
+      // Creating a broadcast stream
+      var streamController = StreamController<int>.broadcast();
+
+      // Adding multiple listeners
+      var subscription1 = streamController.stream.listen((data) {
+        print('Listener 1 received data: $data');
+      });
+
+      var subscription2 = streamController.stream.listen((data) {
+        print('Listener 2 received data: $data');
+      });
+
+      // Adding data to the stream
+      streamController.add(42);
+
+      // Cancelling the subscriptions when done
+      subscription1.cancel();
+      subscription2.cancel();
+    }
+    ```
+
+* `Future` vs. `Stream` basit farkı:
+```dart
+Future<int> futureMethod(int a, int b) async {
+  await Future.delayed(Duration(seconds: 1));
+  return a + b;
+}
+
+
+void main() async {
+  print('your answer: ');
+  int result = await futureMethod(3, 5);
+  print(result);
+}
+```
+and
+```dart
+Stream<int> streamMethod(int item) async* {
+  for (int i = 1; i <= item; i++) {
+    await Future.delayed(Duration(seconds: 1));
+    yield i;
+  }
+}
+
+void main() async {
+  print('your answer: ');
+  await for (var val in streamMethod(5)){
+    print(val);
+  }
+}
+```
+or here is another alternative for stream usage instead of `await for`:
+```dart
+void main() async {
+  print('your answer: ');
+  streamMethod(5).listen((value) {
+    print(value);
+  });
+}
+```
+* flutterda abstract class ile interface farkı:
+	* abstract class kendi instantiate edilemeyen sınıflara denir. works as _blueprints_ for other classes. içinde hem abstract (gövdesiz) hem concrete (gövdeli) metotlar barındırabilir. başka sınıflar **extend** ile miras alır bir abstract class'tan. miras alan sınıf, abstract metotlari overrride etmek zorundadır.
+	```dart
+	abstract class Animal {
+	  void makeSound(); // abstract method
+	  void breathe() {  // concrete method
+	    print("Breathing...");
+	  }
+	}
+
+	class Dog extends Animal {
+	  @override
+	  void makeSound() {
+	    print("Bark!");
+	  }
+	}
+	```
+	* interface konusu da şöyle: flutter'da bütün sınıflar inherently interface'tir. Bir sınıfın interface’ini kullanmak için **implements**  anahtar kelimesi kullanılır.
+	
+	
+	
+* flutterda **provider**in avantajları, dezavantajları
+	* temel InheritedWidget anlayışı üzerine kurulu
+	* hem senkron hem asenkron değişkenleri ve metotları takip edebiliyor
+	* büyük projelerde diğer state managementlar daha mantıklı hale gelir. 	
+	
+	
+	
