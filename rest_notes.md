@@ -2,8 +2,19 @@
 # Rest Notes
 
 * rest, http protokolü üzerinde çalışan bir mimarinin adıdır. bu mimariyi kullanan web servislerine ise rest api denir. rest api için ihtiyacımız olan ilk şey bir URL. bir url'ye GET ile istek atınca sana json/xml formatında bir response döndürür. sadece bu aradaki köprü önemlidir, client server'in iç kodlarını bilmek zorunda değildir, or vice versa.
+* REST'in birkaç temel özelliği vardır:
+	* Her şey bir kaynaktır ve URL'lerle ifade edilir -> GET users/1 , POST /users
+	* Client-Server ayrımı. Yani istemci ile sunucu birbirinden bağımsızdır.
+	* Stateless olması. Her request bir önceki request hakkında hiçbir şey bilmez. Her requestte, tüm bilgileri baştan vermen gerekir.
+	* Cacheable olması. Client tarafında önbellekleme mekanizmaları kullanılır. Performansı arttırır.
+	* Uniform Interface yani tekil bir arayüzü olması. Bunun 4 farklı yapıtaşı vardır:
+		* Kaynak Tanımlama: Kaynaklar URL'ler ile tanımlanır. Örneğin: /users, /products/123.
+		* Kaynak Manipülasyonu: HTTP metotları (GET, POST, PUT, DELETE) kaynaklar üzerinde yapılan işlemleri belirtir.
+		* Self-Descriptive Messages (Kendini Açıklayan Mesajlar): İstemci ve sunucu arasındaki iletişim, mesajların içeriğiyle anlamlandırılır.
+		* HATEOAS (Hypermedia as the Engine of Application State): Bu prensip, bir kaynaktan gelen yanıtın, ilgili diğer kaynaklara (örneğin, bir kullanıcının siparişleri) erişim linklerini içermesini önerir. Bu, API'yi daha keşfedilebilir ve dinamik hale getirir. (Pratikte çok yaygın kullanılmaz, ama bilmek önemlidir.)
+		
+* en önemli özelliği her platformda, dilde, backendde kullanılabilen ortak bir yaklaşım geliştirmiş olmasıdır. 
 * bir api geliştirmek için başka alternatifler de vardır.
-	* REST
 	* SOAP
 	* gRPC
 	* XML-RPC gibi
