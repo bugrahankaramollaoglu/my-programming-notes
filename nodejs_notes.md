@@ -98,9 +98,9 @@ herhangi bir dizinde:
 sudo apt install postgresql postgresql-contrib
 sudo -i -u postgres
 createdb bookdb
-# kullanici yarat
+(kullanici yarat)
 psql 
-# bunu kodda degistirmeyi unutma
+(bunu kodda degistirmeyi unutma)
 ALTER USER postgres WITH PASSWORD 'yourpassword'; 
 \q
 exit
@@ -114,4 +114,69 @@ sequelize bir ORM paketi. Raw sql yazmak yerine otomatik olarak js objelerine ce
 pg nodejs'in postgresql calistirmasi icin gerekli. 
 pg-hstore da yine sequelize'nin kullanması icin key-value işini kolaylaştıran bir paket.
 
-* 
+## HTTP Response Yapısı
+
+Bir **HTTP response (cevap)** üç ana kısımdan oluşur:
+
+---
+
+### 1. Status Line (Durum Satırı)
+
+- Cevabın ilk satırıdır.  
+- İçerik:
+  - **HTTP versiyonu** (`HTTP/1.1`, `HTTP/2`, `HTTP/3`)  
+  - **Status code (durum kodu)** → cevabın sonucunu belirtir  
+    - `200 OK` → başarılı  
+    - `201 Created` → yeni kaynak oluşturuldu  
+    - `404 Not Found` → kaynak yok  
+    - `500 Internal Server Error` → sunucu hatası  
+  - **Status message** → kodun kısa açıklaması  
+
+**Örnek:**
+HTTP/1.1 200 OK
+
+markdown
+Copy
+Edit
+
+---
+
+### 2. Headers (Başlıklar)
+
+- Key–Value çiftlerinden oluşur.  
+- Cevapla ilgili **meta bilgi** taşır.  
+
+**Örnek başlıklar:**
+- `Content-Type: application/json` → body’nin formatını belirtir  
+- `Content-Length: 123` → body’nin uzunluğu  
+- `Set-Cookie: sessionId=abc123` → cookie gönderir  
+- `Cache-Control: no-cache` → tarayıcıya cache ile ilgili talimat verir  
+
+**Örnek:**
+Content-Type: application/json
+Content-Length: 57
+Date: Wed, 21 Aug 2025 18:25:00 GMT
+
+markdown
+Copy
+Edit
+
+---
+
+### 3. Body (Gövde)
+
+- Asıl veriyi içerir.  
+- Türü `Content-Type` header’ına göre değişir:
+  - `text/plain` → düz metin  
+  - `text/html` → HTML sayfası  
+  - `application/json` → JSON veri  
+  - `image/png` → resim dosyası  
+- Body opsiyoneldir (ör: `204 No Content` response’unda body yoktur).  
+
+**Örnek (JSON body):**
+```json
+{
+  "id": 1,
+  "title": "Learn Node.js",
+  "completed": false
+}
