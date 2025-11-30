@@ -404,4 +404,4 @@ paralel programlamada bunlar aynıdır sadece kontrol üniteleri bir değil bird
   - Liskov Substitution Principle (LSP) — Bir alt sınıf (child), üst sınıf (parent) yerine kullanıldığında sistem doğru çalışmaya devam etmeli. Yani türetilmiş sınıf, üst sınıfın yerine geçebilir (substitutable) olmalı.
   - Interface Segregation Principle (ISP) — "Bir sınıf, ihtiyaç duymadığı metodları içeren bir interface’e bağımlı kalmamalıdır."
   - Dependency Inversion Principle (DIP) — Yüksek seviyeli modüller (iş mantığı), düşük seviyeli modüllere (veri kaynağı, API vs.) bağımlı olmamalı. İkisi de soyutlamalara (abstract/interface) bağlı olmalı.
--
+- zaman zaman Unix timestamp denilen bir olayla karşılaşabilirsin. 326732853 gibi bir sayı. bu, timestamplerde, datetime'larda vs. kullanılır. 1 ocak 1970'ten bu yana geçen saniyeyi temsil eder.

@@ -180,3 +180,15 @@ Edit
   "title": "Learn Node.js",
   "completed": false
 }
+
+* JWT nedir? jwt, server -ve- client arasında data alışverişinde kullanılan bir güvenlik protokolüdür. 3 kısımdan oluşan bir string olarak düşünebilirsin. 
+	* 1. kısım, *header* : token tipini (JWT) ve imzalama algoritmasını (HS256) tutar.
+	* 2. kısım, *payload* : verinin adı. mesela ( {username: "test"} ); gibi. bu kısımda iat (issued_at) ve exp (expired_at) verileri de tutulur.
+	* 3. kısım, *signature*: hashlenmiş (şifrelenmiş) bir anahtar. ilk iki kısım değişirse bu da değişir. kendi belirledigin ve .env'de sakladıgın bir SECRET_KEY ile şifrelenir.
+	
+* BEARER_TOKEN nedir? en sık kullanılan token formatıdır. jwt'den dönen bearer token'ini girdigin zaman giris yapan user'in bilgilerini alabilirsin.
+ayrıca, JWT ile ugrasırken bir expiry date belirlersin. dönen token ne kadar süre geçerli olacak (request edildiginde user bilgilerini döndürebilecek) diye. 
+* *Access token* vs. *Refresh token* farkı: 
+	* *access token*: kısa süreli güvenlik tokeni. her request attıgında yeniden olusturulur.
+	* *refresh token*: uzun süreli (days/weeks). client'ta saklanır. böylece user cıkıs yapmadıgı sürece haftalar boyunca logged in kalir.
+	
